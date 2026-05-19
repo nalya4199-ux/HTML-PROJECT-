@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus in Animal Husbandry: Cattle Growth Rate</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>body { font-family: 'Segoe UI', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen p-4 md:p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        <div class="bg-gradient-to-r py-6 px-8 text-white bg-emerald-700">
+            <span class="text-xs font-bold uppercase tracking-wider bg-emerald-800 px-3 py-1 rounded-full">Mathematics for Animal Husbandry</span>
+            <h1 class="text-2xl md:text-3xl font-extrabold mt-2">Cattle Growth Rate Analysis via Derivatives</h1>
+        </div>
+        <div class="p-6 md:p-8 space-y-8">
+            <section class="bg-emerald-50 rounded-xl p-5 border border-emerald-100">
+                <h2 class="text-lg font-bold text-emerald-900 mb-2">🐄 Bioscience Scenario: Optimizing Beef Cattle Management</h2>
+                <p class="text-sm text-emerald-800 leading-relaxed">
+                    In Malaysian intensive beef cattle farming (e.g., Kedah-Kelantan crossbreeds), monitoring the <strong>Average Daily Gain (ADG)</strong> is vital for feed efficiency. By finding the <strong>derivative f'(x)</strong> of the weight function, farmers can pinpoint exactly when the growth rate peaks and when it begins to decelerate, helping them decide the optimal market or slaughter time.
+                </p>
+            </section>
+            <section class="grid md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="text-xs font-bold tracking-wide uppercase text-gray-500">Weight Function, f(x)</h3>
+                    <p class="text-xl font-mono text-gray-800 font-bold my-2">f(x) = -0.15x² + 9.5x + 45</p>
+                    <p class="text-xs text-gray-500">Models cumulative weight (kg) from week x = 0 up to week 32.</p>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 shadow-sm">
+                    <h3 class="text-xs font-bold tracking-wide uppercase text-emerald-600">Growth Rate Function (Derivative), f'(x)</h3>
+                    <p class="text-xl font-mono text-emerald-700 font-bold my-2">f'(x) = -0.3x + 9.5</p>
+                    <p class="text-xs text-emerald-600">Derived using the Power Rule. Represents instantaneous growth rate (kg/week).</p>
+                </div>
+            </section>
+            <section class="space-y-3">
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <h2 class="text-lg font-bold text-gray-800">📊 Interactive Growth Curve (Weeks 0 to 32)</h2>
+                    <span class="text-xs bg-amber-100 text-amber-800 font-medium px-2.5 py-1 rounded-sm animate-pulse">💡 Click any point on the chart line to calculate rate!</span>
+                </div>
+                <div class="relative bg-white p-2 rounded-xl border border-gray-100 shadow-inner h-72 md:h-96">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </section>
+            <section id="calculationDisplay" class="bg-gray-900 text-white rounded-xl p-6 hidden">
+                <h3 class="text-amber-400 font-bold uppercase text-xs tracking-wider mb-3">Calculus Analysis Result</h3>
+                <div class="grid md:grid-cols-3 gap-4 text-center md:text-left">
+                    <div>
+                        <span class="text-gray-400 text-xs block">Selected Time Stage</span>
+                        <span id="calcWeek" class="text-2xl font-extrabold">-</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 text-xs block">Total Animal Weight, f(x)</span>
+                        <span id="calcWeight" class="text-2xl font-extrabold">-</span>
+                    </div>
+                    <div>
+                        <span class="text-amber-400 text-xs font-bold block">Instantaneous Growth Rate, f'(x)</span>
+                        <span id="calcRate" class="text-2xl font-extrabold text-emerald-400">-</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-800">
+                    <span class="text-gray-400 text-xs block font-bold mb-1">Layman Explanation:</span>
+                    <p id="laymanText" class="text-sm text-gray-300 italic">Click on the chart line to analyze target livestock development metrics.</p>
+                </div>
+            </section>
+            <footer class="text-xs text-gray-400 pt-4 border-t border-gray-100 space-y-1">
+                <p class="font-bold text-gray-500">Data & Scenario Reference Base:</p>
+                <p>1. Department of Veterinary Services (DVS) Malaysia – Beef Cattle Performance Guidelines.</p>
+                <p>2. Malaysian Agricultural Research and Development Institute (MARDI) – Growth models for Kedah-Kelantan (KK) cattle.</p>
+            </footer>
+        </div>
+    </div>
+    <script>
+        const weeks = Array.from({length: 33}, (_, i) => i);
+        const weightData = weeks.map(x => (-0.15 * Math.pow(x, 2) + (9.5 * x) + 45).toFixed(2));
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        const growthChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: weeks,
+                datasets: [{
+                    label: 'Cattle Weight (kg)',
+                    data: weightData,
+                    borderColor: '#059669',
+                    borderWidth: 3,
+                    backgroundColor: 'rgba(5, 150, 105, 0.05)',
+                    fill: true,
+                    tension: 0.2,
+                    pointBackgroundColor: '#059669',
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#f59e0b'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Time Period (Weeks Post-Weaning)' } },
+                    y: { title: { display: true, text: 'Total Weight (kg)' }, min: 40 }
+                },
+                onClick: (e, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const xVal = weeks[index];
+                        const fx = (-0.15 * Math.pow(xVal, 2) + (9.5 * xVal) + 45).toFixed(2);
+                        const fPrimeX = (-0.3 * xVal + 9.5).toFixed(2);
+                        let explanation = "";
+                        if (fPrimeX > 7) {
+                            explanation = `At week ${xVal}, the calf is growing rapidly at ${fPrimeX} kg/week! Feed strategy is highly effective.`;
+                        } else if (fPrimeX > 3) {
+                            explanation = `At week ${xVal}, growth slows down slightly to ${fPrimeX} kg/week, but it is still building solid muscle mass.`;
+                        } else {
+                            explanation = `At week ${xVal}, growth rate dropped to ${fPrimeX} kg/week as the animal matures. Optimal market time is near.`;
+                        }
+                        document.getElementById('calculationDisplay').classList.remove('hidden');
+                        document.getElementById('calcWeek').innerText = `Week ${xVal}`;
+                        document.getElementById('calcWeight').innerText = `${fx} kg`;
+                        document.getElementById('calcRate').innerText = `+${fPrimeX} kg/week`;
+                        document.getElementById('laymanText').innerText = explanation;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
