@@ -3,247 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cattle Growth Rate Analysis</title>
+    <title>Simplified Integration Visualizer & Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #0f172a; color: #94a3b8; padding: 20px 20px 0 20px; margin: 0; font-size: 14px; }
-        .wrapper { max-width: 1200px; margin: 0 auto; }
-        .header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 15px; }
-        .logo-text { color: #f8fafc; font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 8px; }
-        .sfh-badge { background: #065f46; color: #34d399; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; border: 1px solid #047857; }
-        .sub-title { font-size: 12px; color: #64748b; margin-left: auto; font-weight: bold; }
-        
-        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media(min-width: 992px) { .grid { grid-template-columns: 380px 1fr; } }
-        .card { background: #1e293b; border-radius: 8px; border: 1px solid #334155; padding: 20px; }
-        h3 { margin-top: 0; color: #f8fafc; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 15px; }
-        
-        .coef-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 15px; }
-        .coef-box { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 6px; }
-        .coef-title { font-size: 11px; color: #64748b; font-weight: bold; text-transform: uppercase; }
-        .coef-val { font-size: 14px; font-weight: bold; color: #10b981; margin-top: 4px; font-family: monospace; }
-        
-        .chart-container { position: relative; height: 420px; width: 100%; background: #1e293b; border-radius: 8px; border: 1px solid #334155; padding: 15px; box-sizing: border-box; }
-        
-        .hud-wrapper { border: 1px solid #10b981; background: #022c22; border-radius: 8px; padding: 15px; margin-top: 20px; display: none; }
-        .hud-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 10px; }
-        @media(min-width: 768px) { .hud-grid { grid-template-columns: 1fr 1fr 1.2fr; } }
-        .hud-box { background: #0f172a; padding: 12px; border-radius: 6px; border: 1px solid #065f46; }
-        .hud-title { font-size: 11px; color: #64748b; font-weight: bold; text-transform: uppercase; }
-        .hud-val { font-size: 18px; font-weight: bold; color: #34d399; margin-top: 4px; }
-        .guideline-box { background: #1e1b4b; border: 1px solid #4338ca; color: #c7d2fe; padding: 12px; border-radius: 6px; }
-
-        /* Ulasan Industri */
-        .context-section { background: #1e293b; border-radius: 8px; border: 1px solid #334155; padding: 25px; margin-top: 25px; }
-        .context-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 15px; }
-        @media(min-width: 768px) { .context-grid { grid-template-columns: 1fr 1fr; } }
-        .context-card { background: #0f172a; padding: 15px; border-radius: 6px; border: 1px solid #334155; }
-        .context-card h4 { margin: 0 0 10px 0; color: #f8fafc; font-size: 14px; display: flex; align-items: center; gap: 6px; }
-
-        /* Rumusan Tambahan Atas Rujukan */
-        .summary-text { font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-top: 20px; margin-bottom: 25px; }
-
-        /* Seksyen References Kad Ggrid Macam Kawan */
-        .ref-section { margin-top: 30px; margin-bottom: 40px; }
-        .ref-title-main { font-size: 11px; color: #64748b; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 15px; display: flex; align-items: center; gap: 6px; }
-        .ref-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        @media(min-width: 768px) { .ref-grid { grid-template-columns: 1fr 1fr; } }
-        @media(min-width: 1100px) { .ref-grid { grid-template-columns: 1fr 1fr 1fr; } }
-        .ref-card { background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
-        .ref-author { font-size: 13px; color: #f8fafc; font-weight: bold; margin-bottom: 6px; }
-        .ref-quote { font-size: 12.5px; color: #94a3b8; line-height: 1.5; font-style: normal; margin-bottom: 12px; }
-        .ref-link { color: #10b981; text-decoration: none; font-size: 11px; font-weight: bold; font-family: monospace; }
-        .ref-link:hover { text-decoration: underline; }
-
-        /* Footer Hitam Paling Bawah Sekali */
-        .footer { background: #090d16; border-top: 1px solid #1e293b; padding: 25px 20px; text-align: center; font-size: 12px; color: #475569; margin-left: -20px; margin-right: -20px; margin-top: 40px; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo-text">
-                <span>🐄 Cattle Growth Rate Analysis (Calculus)</span>
-                <span class="sfh-badge">SFH Cattle Tech</span>
-            </div>
-            <div class="sub-title">Mathematics for Animal Husbandry</div>
-        </div>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <div style="font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 15px; font-weight: bold;">
-            Advanced Bio-Mathematical Modeling & Derivative Analysis
-        </div>
-
-        <div class="grid">
+        <div class="lg:col-span-1 bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col justify-between">
             <div>
-                <div class="card">
-                    <h3>Scenario: Optimizing Beef Cattle Management</h3>
-                    <p style="color: #cbd5e1; font-size: 13px; line-height: 1.5; margin-bottom: 20px;">
-                        Using derivatives to find the Instantaneous Growth Rate (kg/week) for Kedah-Kelantan crossbreed cattle.
-                    </p>
+                <div class="mb-6">
+                    <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider block mb-1">Calculus Toolkit</span>
+                    <h1 class="text-xl font-bold tracking-tight">Definite Integration Visualizer</h1>
+                    <p class="text-xs text-slate-400 mt-1">A lightweight, simpler alternative to Desmos for computing and visualizing areas under biological curves.</p>
+                </div>
 
-                    <h3>Calculus Formulations</h3>
-                    <div class="coef-grid">
-                        <div class="coef-box">
-                            <div class="coef-title">Weight Function f(x)</div>
-                            <div class="coef-val">f(x) = -0.15x² + 9.5x + 45</div>
+                <div class="space-y-4 mb-6">
+                    <label class="block text-xs font-medium text-slate-300">Select Test Function f(x):</label>
+                    <select id="funcSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm font-mono text-emerald-400 focus:outline-hidden focus:border-emerald-500">
+                        <option value="poly">f(x) = -0.05x² + x + 2  (Crop/Animal Yield Curve)</option>
+                        <option value="linear">f(x) = 0.5x + 3       (Constant Acceleration)</option>
+                        <option value="exp">f(x) = 2 · e^(0.15x)     (Exponential Growth phase)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-5 border-t border-slate-700/50 pt-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1">
+                            <span class="text-slate-400">Lower Limit (a)</span>
+                            <span class="text-emerald-400 font-bold" id="valA">2</span>
                         </div>
-                        <div class="coef-box">
-                            <div class="coef-title">Derivative f'(x) (Growth Velocity)</div>
-                            <div class="coef-val" style="color: #ea580c;">f'(x) = -0.3x + 9.5</div>
-                        </div>
+                        <input type="range" id="slideA" min="0" max="9" step="1" value="2" class="w-full accent-emerald-500 bg-slate-950 h-2 rounded-lg cursor-pointer">
                     </div>
-                    <p style="font-size: 11px; color: #64748b; font-style: italic; margin: 0;">
-                        *Click on any point on the chart to generate instant derivative verification and veterinary action steps.
-                    </p>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1">
+                            <span class="text-slate-400">Upper Limit (b)</span>
+                            <span class="text-emerald-400 font-bold" id="valB">8</span>
+                        </div>
+                        <input type="range" id="slideB" min="3" max="15" step="1" value="8" class="w-full accent-emerald-500 bg-slate-950 h-2 rounded-lg cursor-pointer">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1">
+                            <span class="text-slate-400">Interval Subdivisions (n)</span>
+                            <span class="text-cyan-400 font-bold" id="valN">12</span>
+                        </div>
+                        <input type="range" id="slideN" min="4" max="30" step="1" value="12" class="w-full accent-cyan-500 bg-slate-950 h-2 rounded-lg cursor-pointer">
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <div class="chart-container">
-                    <canvas id="myChart"></canvas>
+            <div class="mt-8 bg-slate-950 border border-slate-700/60 p-4 rounded-xl text-center">
+                <span class="text-xxs uppercase tracking-widest text-slate-500 block mb-1">Definite Integral Area Output</span>
+                <div class="font-mono text-2xl font-bold text-amber-400" id="areaDisplay">
+                    ∫ f(x) dx = 0.00
                 </div>
-                
-                <div id="hudWrapper" class="hud-wrapper">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #065f46; padding-bottom: 8px;">
-                        <span style="color: #34d399; font-weight: bold;">Selected Point: Week <span id="hudX">0</span></span>
-                        <span style="font-size: 11px; color: #64748b; font-family: monospace;">Diagnostic Analyzer Output</span>
-                    </div>
-                    
-                    <div class="hud-grid">
-                        <div class="hud-box">
-                            <div class="hud-title">Cumulative Weight f(x)</div>
-                            <div id="hudWeight" class="hud-val">0 kg</div>
-                        </div>
-                        <div class="hud-box">
-                            <div class="hud-title">Instantaneous Gain f'(x)</div>
-                            <div id="hudRate" class="hud-val" style="color: #fbbf24;">0 kg/week</div>
-                        </div>
-                        <div class="guideline-box">
-                            <div style="font-size: 11px; color: #a5b4fc; font-weight: bold; text-transform: uppercase; margin-bottom: 4px;">🕵️‍♂️ Husbandry Action Guideline</div>
-                            <div id="hudGuideline" style="font-size: 12px; line-height: 1.4;">Select a point.</div>
-                        </div>
-                    </div>
-                </div>
+                <p class="text-slate-400 text-xxs mt-1">Computed live via real-time Numerical Integration calculus approximations.</p>
             </div>
         </div>
 
-        <div class="context-section">
-            <h3 style="color: #f8fafc; font-size: 14px; margin-bottom: 5px;">🌾 Malaysian Bioscience Context & Agricultural Technology Application</h3>
-            <p style="font-size: 12px; color: #64748b; margin: 0 0 15px 0;">Applying mathematical growth curves to actual challenges in Malaysian livestock production systems.</p>
-            
-            <div class="context-grid">
-                <div class="context-card">
-                    <h4><span>🌴</span> Oil Palm Frond (OPF) Utilization in Malaysia</h4>
-                    <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin: 0;">
-                        Malaysia is one of the world's leading producers of palm oil, generating massive quantities of <b>Oil Palm Frond (OPF)</b> as an agricultural by-product. While high in fiber, localized research conducted by <b>MARDI</b> shows that processing OPF into silage or pellets optimizes ruminant digestion, enabling Kedah-Kelantan cattle to maintain a stable, predictable weight function velocity.
-                    </p>
-                </div>
-                
-                <div class="context-card">
-                    <h4><span>☀️</span> Microclimate Management & Heat Stress</h4>
-                    <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin: 0;">
-                        Tropical climates in Malaysia routinely experience high temperatures (up to 34°C) and relative humidity. In traditional farming systems, beef cattle undergo severe heat stress, dropping their average daily gain. Implementing intensive ventilation or shaded feedlots protects the animal's metabolism, preventing the derivative growth curve from crashing prematurely before the market weight target is achieved.
-                    </p>
+        <div class="lg:col-span-2 bg-slate-800 p-4 md:p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm font-bold text-slate-300 tracking-wide">Live Function Mapping Arena</h2>
+                <div class="flex items-center gap-3 text-xxs">
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Line f(x)</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-xs bg-emerald-500/20"></span> Shaded Area under Curve</span>
                 </div>
             </div>
 
-            <div class="summary-text">
-                Our model represents this by showing how processed OPF supplementation achieves a growth curve profile extremely close to standard imported feedlots. This derivative study allows veterinary nutritionists to formulate local feeds that maximize instantaneous weight gain (f'(x)) while minimizing imported feedstock costs. By examining the derivative graph, students can visualize a flattened profile if heat stress occurs, showcasing the crucial economic importance of climate-controlled housing systems in modern tropical livestock management.
+            <div class="relative w-full h-[320px] md:h-[420px] bg-slate-950 rounded-xl p-2 border border-slate-900">
+                <canvas id="integrationChart"></canvas>
             </div>
         </div>
 
-        <div class="ref-section">
-            <div class="ref-title-main">📚 PEER-REVIEWED REFERENCE LITERATURE (MALAYSIA CONTEXT)</div>
-            <div class="ref-grid">
-                
-                <div class="ref-card">
-                    <div>
-                        <div class="ref-author">Al-Hadi et al. (UPM Journal)</div>
-                        <div class="ref-quote">"Utilization of processed OPF with beneficial bacteria strains improved nutrient accessibility and subsequent cumulative growth performance in local crossbreed cattle."</div>
-                    </div>
-                    <a href="#" class="ref-link">Research Link →</a>
-                </div>
-
-                <div class="ref-card">
-                    <div>
-                        <div class="ref-author">MARDI Animal Research Unit</div>
-                        <div class="ref-quote">"Evaluating tropical beef growth curves, biological adaptation, and metabolic marker expression under intense ambient heat stress variables."</div>
-                    </div>
-                    <a href="#" class="ref-link">Research Link →</a>
-                </div>
-
-                <div class="ref-card">
-                    <div>
-                        <div class="ref-author">Malaysian Society of Animal Production</div>
-                        <div class="ref-quote">"Mathematical modeling and production constraints of local ruminant livestock groups under changing humid tropical environments."</div>
-                    </div>
-                    <a href="#" class="ref-link">Research Link →</a>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="footer">
-        Designed for Animal Husbandry Technology (SFH) Undergraduate Curriculum, Malaysian Universities.<br>
-        © 2026 MyBio-Derivatives Interactive Bioscience Platform. All rights reserved.
     </div>
 
     <script>
-        let chart;
-        const weeks = Array.from({length: 33}, (_, i) => i);
+        // Setup state controllers from inputs
+        const funcSelect = document.getElementById('funcSelect');
+        const slideA = document.getElementById('slideA');
+        const slideB = document.getElementById('slideB');
+        const slideN = document.getElementById('slideN');
 
-        function calculateData(x) {
-            let y = -0.15 * Math.pow(x, 2) + 9.5 * x + 45;
-            let dy = -0.3 * x + 9.5;
-            return { y: y.toFixed(2), dy: dy.toFixed(2) };
-        }
+        const valA = document.getElementById('valA');
+        const valB = document.getElementById('valB');
+        const valN = document.getElementById('valN');
+        const areaDisplay = document.getElementById('areaDisplay');
 
-        function getGuideline(x, dy) {
-            if (x <= 10) {
-                return `Early weaning phase. Growth velocity is high (+${dy} kg/wk). Focus diet on high-protein starter feeds to support structural skeletal development.`;
-            } else if (x <= 22) {
-                return `Peak operational efficiency. Stable growth at +${dy} kg/wk. Maintain high dry-matter intake using optimized OPF silage formulations to maximize meat yield.`;
-            } else {
-                return `Growth rate decelerating (+${dy} kg/wk) as animal approaches maturity. Feed conversion efficiency drops. Plan for optimal economic market selection or slaughter timeline.`;
+        // Functions Dictionary mapped to choices
+        const functions = {
+            poly: (x) => -0.05 * Math.pow(x, 2) + x + 2,
+            linear: (x) => 0.5 * x + 3,
+            exp: (x) => 2 * Math.exp(0.15 * x)
+        };
+
+        // Initialize Canvas Element
+        const ctx = document.getElementById('integrationChart').getContext('2d');
+        let myChart;
+
+        function calculateAndRender() {
+            // Read inputs
+            const selectedKey = funcSelect.value;
+            const f = functions[selectedKey];
+            let a = parseInt(slideA.value);
+            let b = parseInt(slideB.value);
+            const n = parseInt(slideN.value);
+
+            // Safety guard: ensure lower limit isn't greater than or equal to upper limit
+            if (a >= b) {
+                b = a + 1;
+                slideB.value = b;
             }
-        }
 
-        const weightData = weeks.map(x => calculateData(x).y);
-        const rateData = weeks.map(x => calculateData(x).dy);
+            // Update DOM text labels
+            valA.textContent = a;
+            valB.textContent = b;
+            valN.textContent = n;
 
-        const ctx = document.getElementById('myChart').getContext('2d');
-        chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: weeks.map(w => `W${w}`),
-                datasets: [
-                    { label: 'f(x) - Cumulative Weight (kg)', data: weightData, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.05)', borderWidth: 3, yAxisID: 'yLeft', tension: 0.1, fill: true },
-                    { label: "f'(x) - Instantaneous Growth Rate (kg/wk)", data: rateData, borderColor: '#ea580c', borderDash: [4, 4], borderWidth: 2, yAxisID: 'yRight', tension: 0.1 }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    x: { grid: { color: '#334155' }, ticks: { color: '#64748b' }, title: { display: true, text: 'Time Period (Weeks)', color: '#64748b' } },
-                    yLeft: { type: 'linear', position: 'left', grid: { color: '#334155' }, ticks: { color: '#10b981' }, title: { display: true, text: 'Total Weight (kg)', color: '#10b981' } },
-                    yRight: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#ea580c' }, title: { display: true, text: 'Growth Velocity (kg/week)', color: '#ea580c' } }
+            // Compute values for line graphing (x from 0 to 16 continuous)
+            const xLineData = [];
+            const yLineData = [];
+            for (let x = 0; x <= 16; x += 0.2) {
+                xLineData.push(x.toFixed(1));
+                yLineData.push(f(x));
+            }
+
+            // Compute Area using Trapezoidal Rule Integration Logic & structure visual dataset segments
+            let totalArea = 0;
+            const dx = (b - a) / n;
+            
+            // Background bar datasets mirroring Desmos Riemann step visuals
+            const xBarLabels = [];
+            const yBarValues = [];
+
+            // Numerical integration processing execution loop
+            for (let i = 0; i < n; i++) {
+                const xi = a + i * dx;
+                const xiNext = xi + dx;
+                const midPoint = (xi + xiNext) / 2;
+                const yVal = f(midPoint); // Using midpoint rectangle evaluation approach
+                
+                totalArea += yVal * dx;
+            }
+
+            // Print integration result on the panel
+            areaDisplay.innerHTML = `∫<sub>${a}</sub><sup>${b}</sup> f(x)dx ≈ ${totalArea.toFixed(2)}`;
+
+            // Destruct chart canvas context systematically to safely rewrite configurations cleanly
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            // Draw line configurations alongside shaded region bounds
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xLineData,
+                    datasets: [
+                        {
+                            label: 'f(x)',
+                            data: yLineData,
+                            borderColor: '#10b981',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            tension: 0.1,
+                            fill: {
+                                target: 'origin',
+                                above: 'rgba(16, 185, 129, 0.15)' // Shading configuration mimicking continuous integrals
+                            },
+                            // Custom function boundaries configuration limiting shaded output range strictly between [a, b]
+                            segment: {
+                                backgroundColor: ctx => {
+                                    const currentX = xLineData[ctx.p0DataIndex];
+                                    return (currentX >= a && currentX <= b) ? 'rgba(16, 185, 129, 0.35)' : 'transparent';
+                                }
+                            }
+                        }
+                    ]
                 },
-                plugins: { legend: { labels: { color: '#f8fafc', boxWidth: 12 } } },
-                onClick: (e, elements) => {
-                    if (elements.length > 0) {
-                        const idx = elements[0].index;
-                        let res = calculateData(idx);
-                        
-                        document.getElementById('hudWrapper').style.display = 'block';
-                        document.getElementById('hudX').innerText = idx;
-                        document.getElementById('hudWeight').innerText = `${res.y} kg`;
-                        document.getElementById('hudRate').innerText = `+${res.dy} kg/wk`;
-                        document.getElementById('hudGuideline').innerText = getGuideline(idx, res.dy);
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            min: 0,
+                            max: 16,
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        y: {
+                            type: 'linear',
+                            min: 0,
+                            max: 20,
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        }
                     }
                 }
-            }
+            });
+        }
+
+        // Bind interactive triggers across physical input interface array
+        [funcSelect, slideA, slideB, slideN].forEach(element => {
+            element.addEventListener('input', calculateAndRender);
         });
+
+        // Run application setup calculation sequence on load automatically
+        calculateAndRender();
     </script>
 </body>
 </html>
